@@ -1,0 +1,147 @@
+<!doctype html>
+
+<html lang=en>
+
+<head>
+    <meta charset="utf-8">
+    <title>GRADES</title>
+</head>
+
+<body>
+    <script>
+
+
+
+
+
+class Node {
+    constructor(element) {
+        this.element = element;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        this.head = new Node("head");
+    }
+
+    insert(newElement, after) {
+        let afterNode = this.find(after);
+        if (afterNode === null) return null;
+
+        let newNode = new Node(newElement);
+
+        newNode.next = afterNode.next;
+        afterNode.next = newNode;
+    }
+
+    remove(item) {
+        let prevNode = this.findPrevious(item);
+        if(prevNode === null) return null;
+        prevNode.next = prevNode.next.next;
+    }
+
+    display() {
+        let currNode = this.head.next;
+        while (currNode !== null) {
+            console.log(currNode.element);
+            currNode = currNode.next;
+        }
+    }
+
+    toString() {                                // l'ho aggiunta io per fare quest'esercizio
+        let currNode = this.head.next;
+        let result = "";
+        while (currNode !== null) {
+            result += currNode.element + " - ";
+            currNode = currNode.next;
+        }
+        result = result.substring(0, result.length - 3)
+        return result;
+    }
+
+    // HELPER FUNCTIONS
+
+    find(item) {
+        let currNode = this.head;
+        while (currNode !== null && currNode.element !== item) {
+            currNode = currNode.next;
+        }
+        return currNode;
+    }
+
+    findPrevious(item) {
+        let currNode = this.head;
+        while (currNode.next != null && currNode.next.element != item) {
+            currNode = currNode.next;
+        }
+        if (currNode.next === null) return null;
+        return currNode;
+    }
+}
+
+
+
+let grades = new LinkedList();
+
+let lastGrade = "head";
+
+let infoString = 
+    "----- WELCOME TO THE GRADES MENU -----" + "\n" +
+    "\n" +
+    "COMMANDS:" + "\n" +
+    "\n" +
+    "add [grade]     ---   add a new grade to the list" + "\n" +
+    "undo     ---   undo the last grade added" + "\n" +
+    "reset     ---   remove all the grades added" + "\n" +
+    "list     ---   display the grades" + "\n" +
+    "\n"
+;
+
+while(true) {
+    let input = prompt(`${infoString}`);
+
+    if (input.substring(0, 3) === "add") {
+        let grade = input.split(" ")[1];
+        grades.insert(grade, lastGrade);
+        lastGrade = grade;
+        
+        alert(`----- YOU ADDED THE GRADE: ${lastGrade} -----\n`)
+    }
+
+    else if (input === "undo") {
+        if (lastGrade !== "head") {
+            let temp = grades.findPrevious(lastGrade).element;
+            grades.remove(lastGrade);
+            alert(`----- YOU REMOVED THE GRADE: ${lastGrade} -----\n`)
+            lastGrade = temp;
+        } else {
+            alert("----- YOU HAVEN'T ADDED ANY GRADE YET -----\n")
+        }
+    }
+
+    else if (input === "reset") {
+        grades.head.next = null;
+        lastGrade = "head";
+        alert("----- ALL THE GRADES HAVE BEEN REMOVED -----\n");
+    }
+
+    else if (input === "list") {
+        if (lastGrade !== "head") alert(`----- GRADES: -----\n\n${grades.toString()}\n\n`)
+        else alert("----- THERE ARE NO GRADES YET -----\n")
+    }
+
+    else {
+        alert(`${input}: comando non trovato`)
+    }
+}
+
+
+
+
+
+    </script>
+</body>
+
+</html>
